@@ -8,7 +8,7 @@
 <style>
 
 body {
-    font-family: Arial;
+    font-family: Montserrat;
     font-size: 32px;
     text-align: center;
 }
@@ -131,6 +131,15 @@ async function leer(){
 
 
 
+function formatoCHF(valor){
+
+    return Number(valor)
+    .toFixed(2)
+    .replace(".", ",");
+}
+
+
+
 async function actualizar(){
 
     let d = await leer();
@@ -140,7 +149,7 @@ async function actualizar(){
 
     "📦 Pedidos: " + d.pedidos +
 
-    "<br>💰 " + Number(d.dinero).toFixed(2) + " CHF";
+    "<br>💰 " + formatoCHF(d.dinero) + " CHF";
 
 }
 
@@ -178,7 +187,7 @@ document.getElementById("dineroBtn").onclick = async ()=>{
     let d = await leer();
 
 
-    d.dinero = 
+    d.dinero =
     (Number(d.dinero)+cantidad).toFixed(2);
 
 
