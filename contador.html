@@ -17,9 +17,8 @@ text-shadow:2px 2px 5px black;
 
 <body>
 
-🛵 UBER EATS LIVE<br>
 📦 Pedidos: <span id="pedidos">0</span><br>
-💶 Ganado: <span id="dinero">0.00</span> €
+💶 Ganado: <span id="dinero">0.0</span> CHF
 
 <script type="module">
 
@@ -41,7 +40,6 @@ const firebaseConfig = {
 };
 
 
-
 const app = initializeApp(firebaseConfig);
 
 const db = getDatabase(app);
@@ -49,13 +47,13 @@ const db = getDatabase(app);
 
 onValue(ref(db,"contador"),(snapshot)=>{
 
-let datos=snapshot.val() || {};
+let datos = snapshot.val() || {};
 
-document.getElementById("pedidos").innerHTML =
-datos.pedidos || 0;
+document.getElementById("pedidos").textContent =
+datos.pedidos ?? 0;
 
-document.getElementById("dinero").innerHTML =
-datos.dinero || "0.00";
+document.getElementById("dinero").textContent =
+datos.dinero ?? "0.0";
 
 });
 
