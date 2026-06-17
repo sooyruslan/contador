@@ -1,71 +1,143 @@
 <!DOCTYPE html>
 <html>
 
-<body style="font-family:Arial;font-size:30px">
+<head>
 
-<h2>Control Uber Eats</h2>
+<style>
 
-<div id="info">Cargando...</div>
+body {
+font-family: Arial;
+font-size: 35px;
+text-align:center;
+}
+
+button {
+font-size: 35px;
+padding: 20px;
+margin: 10px;
+border-radius: 15px;
+}
+
+input {
+font-size: 35px;
+width: 200px;
+padding: 15px;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<h2>🛵 Control Uber Eats</h2>
+
+
+<div id="info">
+Cargando...
+</div>
+
 
 <br>
 
-<button id="pedidoBtn">+ Pedido</button>
+
+<button id="pedidoBtn">
+📦 + Pedido
+</button>
+
 
 <br><br>
 
-<button id="cincoBtn">+5 €</button>
-<button id="diezBtn">+10 €</button>
+
+<input id="cantidad" 
+type="number" 
+step="0.1" 
+placeholder="CHF">
+
+
+<br>
+
+
+<button id="dineroBtn">
+💰 Añadir CHF
+</button>
+
 
 <br><br>
 
-<button id="resetBtn">Reset</button>
+
+<button id="resetBtn">
+🔄 Reset día
+</button>
+
 
 
 <script type="module">
 
+
 import { initializeApp } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 
 import { getDatabase, ref, get, set } 
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 
+
 const firebaseConfig = {
-  apiKey: "AIzaSyBGMRtu155hDZ6uCyhGyTMxc8h373Z6zBk",
-  authDomain: "sooyruslan-22845.firebaseapp.com",
-  databaseURL: "https://sooyruslan-22845-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "sooyruslan-22845",
-  storageBucket: "sooyruslan-22845.firebasestorage.app",
-  messagingSenderId: "1070434388237",
-  appId: "1:1070434388237:web:5db8308bde07d611794844"
+
+apiKey: "AIzaSyBGMRtu155hDZ6uCyhGyTMxc8h373Z6zBk",
+
+authDomain: "sooyruslan-22845.firebaseapp.com",
+
+databaseURL: "https://sooyruslan-22845-default-rtdb.europe-west1.firebasedatabase.app",
+
+projectId: "sooyruslan-22845",
+
+storageBucket: "sooyruslan-22845.firebasestorage.app",
+
+messagingSenderId: "1070434388237",
+
+appId: "1:1070434388237:web:5db8308bde07d611794844"
+
 };
 
 
+
 const app = initializeApp(firebaseConfig);
+
 const db = getDatabase(app);
+
 
 
 async function leer(){
 
 let snap = await get(ref(db,"contador"));
 
-return snap.val() || {pedidos:0,dinero:0};
+return snap.val() || {
+pedidos:0,
+dinero:0
+};
 
 }
 
 
-async function actualizar(){
+
+async function actualizarPantalla(){
 
 let d = await leer();
 
 document.getElementById("info").innerHTML =
 "📦 Pedidos: " + d.pedidos +
-"<br>💶 Ganado: " + d.dinero + " €";
+"<br>💰 " + Number(d.dinero).toFixed(1) + " CHF";
 
 }
 
 
+
 document.getElementById("pedidoBtn").onclick = async ()=>{
+
 
 let d = await leer();
 
@@ -73,51 +145,67 @@ d.pedidos++;
 
 await set(ref(db,"contador"),d);
 
-actualizar();
+actualizarPantalla();
 
 };
 
 
-document.getElementById("cincoBtn").onclick = async ()=>{
+
+document.getElementById("dineroBtn").onclick = async ()=>{
+
+
+let valor = Number(
+document.getElementById("cantidad").value
+);
+
+
+if(!valor) return;
+
 
 let d = await leer();
 
-d.dinero = (Number(d.dinero)+5).toFixed(2);
+
+d.dinero =
+(Number(d.dinero)+valor).toFixed(1);
+
+
 
 await set(ref(db,"contador"),d);
 
-actualizar();
+
+document.getElementById("cantidad").value="";
+
+
+actualizarPantalla();
+
 
 };
 
-
-document.getElementById("diezBtn").onclick = async ()=>{
-
-let d = await leer();
-
-d.dinero = (Number(d.dinero)+10).toFixed(2);
-
-await set(ref(db,"contador"),d);
-
-actualizar();
-
-};
 
 
 document.getElementById("resetBtn").onclick = ()=>{
 
+
 set(ref(db,"contador"),{
+
 pedidos:0,
+
 dinero:0
+
 });
+
 
 };
 
 
-actualizar();
+
+actualizarPantalla();
+
 
 
 </script>
 
+
 </body>
+
 </html>
