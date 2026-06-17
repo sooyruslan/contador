@@ -5,20 +5,20 @@
 
 <h2>Control Uber Eats</h2>
 
-<div id="info"></div>
+<div id="info">Cargando...</div>
 
 <br>
 
-<button onclick="pedido()">+ Pedido</button>
+<button id="pedidoBtn">+ Pedido</button>
 
 <br><br>
 
-<button onclick="sumar(5)">+5 €</button>
-<button onclick="sumar(10)">+10 €</button>
+<button id="cincoBtn">+5 €</button>
+<button id="diezBtn">+10 €</button>
 
 <br><br>
 
-<button onclick="resetear()">Reset</button>
+<button id="resetBtn">Reset</button>
 
 
 <script type="module">
@@ -41,51 +41,80 @@ const firebaseConfig = {
 };
 
 
-
-const app=initializeApp(firebaseConfig);
-
-const db=getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
 
 async function leer(){
 
-let snap=await get(ref(db,"contador"));
+let snap = await get(ref(db,"contador"));
 
 return snap.val() || {pedidos:0,dinero:0};
 
 }
 
 
-async function pedido(){
+async function actualizar(){
 
-let d=await leer();
+let d = await leer();
+
+document.getElementById("info").innerHTML =
+"📦 Pedidos: " + d.pedidos +
+"<br>💶 Ganado: " + d.dinero + " €";
+
+}
+
+
+document.getElementById("pedidoBtn").onclick = async ()=>{
+
+let d = await leer();
 
 d.pedidos++;
 
-set(ref(db,"contador"),d);
+await set(ref(db,"contador"),d);
 
-}
+actualizar();
 
-
-async function sumar(x){
-
-let d=await leer();
-
-d.dinero=(Number(d.dinero)+x).toFixed(2);
-
-set(ref(db,"contador"),d);
-
-}
+};
 
 
-function resetear(){
+document.getElementById("cincoBtn").onclick = async ()=>{
+
+let d = await leer();
+
+d.dinero = (Number(d.dinero)+5).toFixed(2);
+
+await set(ref(db,"contador"),d);
+
+actualizar();
+
+};
+
+
+document.getElementById("diezBtn").onclick = async ()=>{
+
+let d = await leer();
+
+d.dinero = (Number(d.dinero)+10).toFixed(2);
+
+await set(ref(db,"contador"),d);
+
+actualizar();
+
+};
+
+
+document.getElementById("resetBtn").onclick = ()=>{
 
 set(ref(db,"contador"),{
 pedidos:0,
 dinero:0
 });
 
-}
+};
+
+
+actualizar();
 
 
 </script>
