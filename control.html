@@ -3,25 +3,33 @@
 
 <head>
 
+<meta charset="UTF-8">
+
 <style>
 
 body {
-font-family: Arial;
-font-size: 35px;
-text-align:center;
+    font-family: Arial;
+    font-size: 32px;
+    text-align: center;
 }
 
 button {
-font-size: 35px;
-padding: 20px;
-margin: 10px;
-border-radius: 15px;
+    font-size: 35px;
+    padding: 25px;
+    margin: 12px;
+    border-radius: 20px;
 }
 
 input {
-font-size: 35px;
-width: 200px;
-padding: 15px;
+    font-size: 35px;
+    width: 220px;
+    padding: 15px;
+    text-align: center;
+}
+
+#info {
+    margin: 20px;
+    font-size: 40px;
 }
 
 </style>
@@ -31,7 +39,8 @@ padding: 15px;
 
 <body>
 
-<h2>🛵 Control Uber Eats</h2>
+
+<h2>🛵 Uber Eats Control</h2>
 
 
 <div id="info">
@@ -39,20 +48,18 @@ Cargando...
 </div>
 
 
-<br>
-
-
 <button id="pedidoBtn">
-📦 + Pedido
+📦 + PEDIDO
 </button>
 
 
 <br><br>
 
 
-<input id="cantidad" 
-type="number" 
-step="0.1" 
+<input 
+id="cantidad"
+type="number"
+step="0.01"
 placeholder="CHF">
 
 
@@ -60,7 +67,7 @@ placeholder="CHF">
 
 
 <button id="dineroBtn">
-💰 Añadir CHF
+💰 AÑADIR CHF
 </button>
 
 
@@ -68,7 +75,7 @@ placeholder="CHF">
 
 
 <button id="resetBtn">
-🔄 Reset día
+🔄 RESET
 </button>
 
 
@@ -113,24 +120,27 @@ const db = getDatabase(app);
 
 async function leer(){
 
-let snap = await get(ref(db,"contador"));
+    let snap = await get(ref(db,"contador"));
 
-return snap.val() || {
-pedidos:0,
-dinero:0
-};
+    return snap.val() || {
+        pedidos:0,
+        dinero:0
+    };
 
 }
 
 
 
-async function actualizarPantalla(){
+async function actualizar(){
 
-let d = await leer();
+    let d = await leer();
 
-document.getElementById("info").innerHTML =
-"📦 Pedidos: " + d.pedidos +
-"<br>💰 " + Number(d.dinero).toFixed(1) + " CHF";
+
+    document.getElementById("info").innerHTML =
+
+    "📦 Pedidos: " + d.pedidos +
+
+    "<br>💰 " + Number(d.dinero).toFixed(2) + " CHF";
 
 }
 
@@ -139,13 +149,16 @@ document.getElementById("info").innerHTML =
 document.getElementById("pedidoBtn").onclick = async ()=>{
 
 
-let d = await leer();
+    let d = await leer();
 
-d.pedidos++;
 
-await set(ref(db,"contador"),d);
+    d.pedidos++;
 
-actualizarPantalla();
+
+    await set(ref(db,"contador"),d);
+
+
+    actualizar();
 
 };
 
@@ -154,52 +167,54 @@ actualizarPantalla();
 document.getElementById("dineroBtn").onclick = async ()=>{
 
 
-let valor = Number(
-document.getElementById("cantidad").value
-);
+    let cantidad = Number(
+        document.getElementById("cantidad").value
+    );
 
 
-if(!valor) return;
+    if(!cantidad) return;
 
 
-let d = await leer();
+    let d = await leer();
 
 
-d.dinero =
-(Number(d.dinero)+valor).toFixed(1);
-
-
-
-await set(ref(db,"contador"),d);
-
-
-document.getElementById("cantidad").value="";
-
-
-actualizarPantalla();
-
-
-};
+    d.dinero = 
+    (Number(d.dinero)+cantidad).toFixed(2);
 
 
 
-document.getElementById("resetBtn").onclick = ()=>{
+    await set(ref(db,"contador"),d);
 
 
-set(ref(db,"contador"),{
+    document.getElementById("cantidad").value="";
 
-pedidos:0,
 
-dinero:0
-
-});
-
+    actualizar();
 
 };
 
 
 
-actualizarPantalla();
+
+document.getElementById("resetBtn").onclick = async ()=>{
+
+
+    await set(ref(db,"contador"),{
+
+        pedidos:0,
+
+        dinero:0
+
+    });
+
+
+    actualizar();
+
+};
+
+
+
+actualizar();
 
 
 
