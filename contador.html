@@ -5,11 +5,11 @@
 
 <style>
 body {
-  background: transparent;
-  color: white;
-  font-family: Arial;
-  font-size: 45px;
-  text-shadow: 2px 2px 5px black;
+background: transparent;
+color:white;
+font-family:Arial;
+font-size:45px;
+text-shadow:2px 2px 5px black;
 }
 </style>
 
@@ -17,17 +17,48 @@ body {
 
 <body>
 
-
+🛵 UBER EATS LIVE<br>
 📦 Pedidos: <span id="pedidos">0</span><br>
-💶 Ganado: <span id="dinero">0.0</span> CHF
+💶 Ganado: <span id="dinero">0.00</span> €
 
-<script>
+<script type="module">
 
-let pedidos = localStorage.getItem("pedidos") || 0;
-let dinero = localStorage.getItem("dinero") || 0;
+import { initializeApp } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-document.getElementById("pedidos").innerHTML = pedidos;
-document.getElementById("dinero").innerHTML = dinero;
+import { getDatabase, ref, onValue } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBGMRtu155hDZ6uCyhGyTMxc8h373Z6zBk",
+  authDomain: "sooyruslan-22845.firebaseapp.com",
+  databaseURL: "https://sooyruslan-22845-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "sooyruslan-22845",
+  storageBucket: "sooyruslan-22845.firebasestorage.app",
+  messagingSenderId: "1070434388237",
+  appId: "1:1070434388237:web:5db8308bde07d611794844"
+};
+
+
+
+const app = initializeApp(firebaseConfig);
+
+const db = getDatabase(app);
+
+
+onValue(ref(db,"contador"),(snapshot)=>{
+
+let datos=snapshot.val() || {};
+
+document.getElementById("pedidos").innerHTML =
+datos.pedidos || 0;
+
+document.getElementById("dinero").innerHTML =
+datos.dinero || "0.00";
+
+});
+
 
 </script>
 
