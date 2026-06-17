@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+
 <style>
 body {
   background: transparent;
   color: white;
   font-family: Arial;
-  font-size: 40px;
-}
-
-#contador {
+  font-size: 45px;
   text-shadow: 2px 2px 5px black;
 }
 </style>
+
 </head>
 
 <body>
 
-<div id="contador">
+
 📦 Pedidos: <span id="pedidos">0</span><br>
 💶 Ganado: <span id="dinero">0.00</span> €
-</div>
+
+<script>
+
+let pedidos = localStorage.getItem("pedidos") || 0;
+let dinero = localStorage.getItem("dinero") || 0;
+
+document.getElementById("pedidos").innerHTML = pedidos;
+document.getElementById("dinero").innerHTML = dinero;
+
+</script>
 
 </body>
 </html>
